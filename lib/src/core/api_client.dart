@@ -782,27 +782,31 @@ class ApiClient {
       );
     }
 
-    // RENOVAÇÃO AUTOMÁTICA: Verificar se token está próximo de expirar
-    if (_authModel!.shouldRefresh || _authModel!.isExpired) {
-      if (_storedCredentials != null && _authService != null) {
-        try {
-          // Re-autenticar automaticamente
-          _authModel = await _authService!.authenticate(_storedCredentials!);
-        } catch (e) {
-          // Se falhar a re-autenticação, limpar tudo
-          _authModel = null;
-          throw Exception(
-            'Token expirado e não foi possível renovar automaticamente. '
-            'Erro: $e. Por favor, chame authenticate() novamente.',
-          );
-        }
-      } else {
-        // Não temos credenciais para re-autenticar
+    // RENOVAÇÃO AUTOMÁTICA: fluxo mTLS preenche [_storedCredentials]; autenticação via
+    // Cloud Function (Web) não — nesse caso [shouldRefresh] não pode forçar renovação mTLS.
+    // Caso contrário ocorre falso "Token expirado" logo após authenticateWithProcurador.
+    final podeRenovarComMtls =
+        _storedCredentials != null && _authService != null;
+    final precisaRenovarComMtls =
+        (_authModel!.shouldRefresh || _authModel!.isExpired) && podeRenovarComMtls;
+    final tokenExpiradoSemRenovacao =
+        _authModel!.isExpired && !podeRenovarComMtls;
+
+    if (precisaRenovarComMtls) {
+      try {
+        _authModel = await _authService!.authenticate(_storedCredentials!);
+      } catch (e) {
         _authModel = null;
         throw Exception(
-          'Token expirado. Por favor, chame authenticate() novamente.',
+          'Token expirado e não foi possível renovar automaticamente. '
+          'Erro: $e. Por favor, chame authenticate() novamente.',
         );
       }
+    } else if (tokenExpiradoSemRenovacao) {
+      _authModel = null;
+      throw Exception(
+        'Token expirado. Por favor, chame authenticate() novamente.',
+      );
     }
 
     // Usar dados customizados se fornecidos, senão usar os dados padrão

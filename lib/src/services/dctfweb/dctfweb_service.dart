@@ -39,6 +39,36 @@ class DctfWebService {
 
   DctfWebService(this._apiClient);
 
+  /// Atalho para [gerarDocumentoArrecadacao]
+  Future<GerarGuiaResponse> gerarGuia({
+    String? contribuinteNumero,
+    required CategoriaDctf categoria,
+    required String anoPA,
+    String? mesPA,
+    String? diaPA,
+    int? cnoAfericao,
+    int? numeroReciboEntrega,
+    String? numProcReclamatoria,
+    int? dataAcolhimentoProposta,
+    List<SistemaOrigem>? idsSistemaOrigem,
+    String? contratanteNumero,
+    String? autorPedidoDadosNumero,
+  }) =>
+      gerarDocumentoArrecadacao(
+        contribuinteNumero: contribuinteNumero,
+        categoria: categoria,
+        anoPA: anoPA,
+        mesPA: mesPA,
+        diaPA: diaPA,
+        cnoAfericao: cnoAfericao,
+        numeroReciboEntrega: numeroReciboEntrega,
+        numProcReclamatoria: numProcReclamatoria,
+        dataAcolhimentoProposta: dataAcolhimentoProposta,
+        idsSistemaOrigem: idsSistemaOrigem,
+        contratanteNumero: contratanteNumero,
+        autorPedidoDadosNumero: autorPedidoDadosNumero,
+      );
+
   /// Gera documento de arrecadação (DARF/DAE) para uma declaração ATIVA
   ///
   /// [contribuinteNumero] CPF ou CNPJ do contribuinte
