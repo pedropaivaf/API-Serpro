@@ -788,7 +788,8 @@ class ApiClient {
     final podeRenovarComMtls =
         _storedCredentials != null && _authService != null;
     final precisaRenovarComMtls =
-        (_authModel!.shouldRefresh || _authModel!.isExpired) && podeRenovarComMtls;
+        (_authModel!.shouldRefresh || _authModel!.isExpired) &&
+        podeRenovarComMtls;
     final tokenExpiradoSemRenovacao =
         _authModel!.isExpired && !podeRenovarComMtls;
 

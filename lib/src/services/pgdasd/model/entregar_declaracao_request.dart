@@ -431,7 +431,7 @@ class Atividade {
   });
 
   /// Valida se o valor da atividade é positivo
-  bool get isValorValido => valorAtividade > 0;
+  bool get isValorValido => valorAtividade >= 0;
 
   /// Valida se a atividade está correta
   bool get isValid {
@@ -502,7 +502,7 @@ class ReceitaAtividade {
   });
 
   /// Valida se o valor é positivo
-  bool get isValorValido => valor > 0;
+  bool get isValorValido => valor >= 0;
 
   /// Valida se a receita está correta
   bool get isValid {

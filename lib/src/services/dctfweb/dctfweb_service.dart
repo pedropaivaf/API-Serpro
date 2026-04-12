@@ -53,21 +53,20 @@ class DctfWebService {
     List<SistemaOrigem>? idsSistemaOrigem,
     String? contratanteNumero,
     String? autorPedidoDadosNumero,
-  }) =>
-      gerarDocumentoArrecadacao(
-        contribuinteNumero: contribuinteNumero,
-        categoria: categoria,
-        anoPA: anoPA,
-        mesPA: mesPA,
-        diaPA: diaPA,
-        cnoAfericao: cnoAfericao,
-        numeroReciboEntrega: numeroReciboEntrega,
-        numProcReclamatoria: numProcReclamatoria,
-        dataAcolhimentoProposta: dataAcolhimentoProposta,
-        idsSistemaOrigem: idsSistemaOrigem,
-        contratanteNumero: contratanteNumero,
-        autorPedidoDadosNumero: autorPedidoDadosNumero,
-      );
+  }) => gerarDocumentoArrecadacao(
+    contribuinteNumero: contribuinteNumero,
+    categoria: categoria,
+    anoPA: anoPA,
+    mesPA: mesPA,
+    diaPA: diaPA,
+    cnoAfericao: cnoAfericao,
+    numeroReciboEntrega: numeroReciboEntrega,
+    numProcReclamatoria: numProcReclamatoria,
+    dataAcolhimentoProposta: dataAcolhimentoProposta,
+    idsSistemaOrigem: idsSistemaOrigem,
+    contratanteNumero: contratanteNumero,
+    autorPedidoDadosNumero: autorPedidoDadosNumero,
+  );
 
   /// Gera documento de arrecadação (DARF/DAE) para uma declaração ATIVA
   ///

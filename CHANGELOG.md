@@ -1,3 +1,9 @@
+## [2.0.15] - 2026-04-12
+- Ajuste de declaração sem faturamento.
+
+## [2.0.14] - 2026-01-31
+- Correção de erro na resposta do serviço PGDASD.
+
 ## [2.0.13] - 2026-01-31
 - Ajuste de exportação de classes.
 
