@@ -1,3 +1,6 @@
+## [2.0.16] - 2026-04-16
+- Correção de bugs.
+
 ## [2.0.15] - 2026-04-12
 - Ajuste de declaração sem faturamento.
 

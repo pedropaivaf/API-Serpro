@@ -99,38 +99,43 @@ e renova antes de fazer a requisição. Isso é transparente para o usuário.</p
     );
   }
 
-  &#47;&#47; RENOVAÇÃO AUTOMÁTICA: Verificar se token está próximo de expirar
-  if (_authModel!.shouldRefresh || _authModel!.isExpired) {
-    if (_storedCredentials != null &amp;&amp; _authService != null) {
-      try {
-        &#47;&#47; Re-autenticar automaticamente
-        _authModel = await _authService!.authenticate(_storedCredentials!);
-      } catch (e) {
-        &#47;&#47; Se falhar a re-autenticação, limpar tudo
-        _authModel = null;
-        throw Exception(
-          &#39;Token expirado e não foi possível renovar automaticamente. &#39;
-          &#39;Erro: $e. Por favor, chame authenticate() novamente.&#39;,
-        );
-      }
-    } else {
-      &#47;&#47; Não temos credenciais para re-autenticar
+  &#47;&#47; RENOVAÇÃO AUTOMÁTICA: fluxo mTLS preenche [_storedCredentials]; autenticação via
+  &#47;&#47; Cloud Function (Web) não — nesse caso [shouldRefresh] não pode forçar renovação mTLS.
+  &#47;&#47; Caso contrário ocorre falso &quot;Token expirado&quot; logo após authenticateWithProcurador.
+  final podeRenovarComMtls =
+      _storedCredentials != null &amp;&amp; _authService != null;
+  final precisaRenovarComMtls =
+      (_authModel!.shouldRefresh || _authModel!.isExpired) &amp;&amp;
+      podeRenovarComMtls;
+  final tokenExpiradoSemRenovacao =
+      _authModel!.isExpired &amp;&amp; !podeRenovarComMtls;
+
+  if (precisaRenovarComMtls) {
+    try {
+      _authModel = await _authService!.authenticate(_storedCredentials!);
+    } catch (e) {
       _authModel = null;
       throw Exception(
-        &#39;Token expirado. Por favor, chame authenticate() novamente.&#39;,
+        &#39;Token expirado e não foi possível renovar automaticamente. &#39;
+        &#39;Erro: $e. Por favor, chame authenticate() novamente.&#39;,
       );
     }
+  } else if (tokenExpiradoSemRenovacao) {
+    _authModel = null;
+    throw Exception(
+      &#39;Token expirado. Por favor, chame authenticate() novamente.&#39;,
+    );
   }
 
   &#47;&#47; Usar dados customizados se fornecidos, senão usar os dados padrão
   final finalContratanteNumero =
       contratanteNumero ?? _authModel!.contratanteNumero;
 
-  &#47;&#47; Quando há token de procurador, o autorPedidoDadosNumero deve ser o contribuinteNumero
+  &#47;&#47; Quando há token de procurador, o autorPedidoDadosNumero deve ser o contratante da solução
   final finalAutorPedidoDadosNumero =
       autorPedidoDadosNumero ??
       (hasProcuradorToken
-          ? request.contribuinteNumero
+          ? _authModel!.contratanteNumero
           : _authModel!.autorPedidoDadosNumero);
 
   &#47;&#47; Criar o JSON completo usando os dados de autenticação
@@ -293,7 +298,7 @@ e renova antes de fazer a requisição. Isso é transparente para o usuário.</p
 <footer>
   <span class="no-break">
     serpro_integra_contador_api
-      2.0.12
+      2.0.16
   </span>
   
 </footer>

@@ -64,6 +64,8 @@ Package Dart para integração completa com a API do SERPRO Integra Contador, fo
 
 Adicione ao seu `pubspec.yaml`:
 
+Pacote no pub.dev: [serpro_integra_contador_api](https://pub.dev/packages/serpro_integra_contador_api)
+
 ```yaml
 dependencies:
   serpro_integra_contador_api: ^2.0.13
