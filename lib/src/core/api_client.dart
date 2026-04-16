@@ -814,11 +814,11 @@ class ApiClient {
     final finalContratanteNumero =
         contratanteNumero ?? _authModel!.contratanteNumero;
 
-    // Quando há token de procurador, o autorPedidoDadosNumero deve ser o contribuinteNumero
+    // Quando há token de procurador, o autorPedidoDadosNumero deve ser o contratante da solução
     final finalAutorPedidoDadosNumero =
         autorPedidoDadosNumero ??
         (hasProcuradorToken
-            ? request.contribuinteNumero
+            ? _authModel!.contratanteNumero
             : _authModel!.autorPedidoDadosNumero);
 
     // Criar o JSON completo usando os dados de autenticação
