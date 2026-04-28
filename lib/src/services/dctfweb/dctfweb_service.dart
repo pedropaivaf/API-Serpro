@@ -319,11 +319,8 @@ class DctfWebService {
         contribuinteNumero ??
         _apiClient.contribuinteNumero ??
         (throw ArgumentError('CPF/CNPJ do contribuinte é obrigatório'));
-    // Validar XML antes de enviar
     if (!validarXmlBase64(xmlAssinadoBase64)) {
-      if (contratanteNumero != '00000000000') {
-        throw ArgumentError('XML Base64 inválido ou mal formado');
-      }
+      throw ArgumentError('XML Base64 inválido ou mal formado');
     }
 
     final dctfRequest = TransmitirDeclaracaoDctfRequest(

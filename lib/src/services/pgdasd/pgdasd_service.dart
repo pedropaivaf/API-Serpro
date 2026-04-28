@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:serpro_integra_contador_api/src/core/api_client.dart';
 import 'package:serpro_integra_contador_api/src/base/base_request.dart';
 import 'package:serpro_integra_contador_api/src/services/pgdasd/model/entregar_declaracao_request.dart'
@@ -123,7 +125,7 @@ class PgdasdService {
         idSistema: 'PGDASD',
         idServico: 'TRANSDECLARACAO11',
         versaoSistema: '1.0',
-        dados: request.toJson().toString(),
+        dados: jsonEncode(request.toJson()),
       ),
     );
 
@@ -169,7 +171,7 @@ class PgdasdService {
         idSistema: 'PGDASD',
         idServico: 'GERARDAS12',
         versaoSistema: '1.0',
-        dados: dasRequest.toJson().toString(),
+        dados: jsonEncode(dasRequest.toJson()),
       ),
     );
 
@@ -200,6 +202,9 @@ class PgdasdService {
         contribuinteNumero ??
         _apiClient.contribuinteNumero ??
         (throw ArgumentError('CNPJ do contribuinte é obrigatório'));
+    if (anoCalendario == null && periodoApuracao == null) {
+      throw ArgumentError('Informe anoCalendario ou periodoApuracao');
+    }
     final consultaRequest = anoCalendario != null
         ? ConsultarDeclaracoesRequest.porAnoCalendario(anoCalendario)
         : ConsultarDeclaracoesRequest.porPeriodoApuracao(periodoApuracao!);
@@ -214,7 +219,7 @@ class PgdasdService {
         idSistema: 'PGDASD',
         idServico: 'CONSDECLARACAO13',
         versaoSistema: '1.0',
-        dados: consultaRequest.toJson().toString(),
+        dados: jsonEncode(consultaRequest.toJson()),
       ),
     );
 
@@ -257,7 +262,7 @@ class PgdasdService {
         idSistema: 'PGDASD',
         idServico: 'CONSULTIMADECREC14',
         versaoSistema: '1.0',
-        dados: consultaRequest.toJson().toString(),
+        dados: jsonEncode(consultaRequest.toJson()),
       ),
     );
 
@@ -300,7 +305,7 @@ class PgdasdService {
         idSistema: 'PGDASD',
         idServico: 'CONSDECREC15',
         versaoSistema: '1.0',
-        dados: consultaRequest.toJson().toString(),
+        dados: jsonEncode(consultaRequest.toJson()),
       ),
     );
 
@@ -341,7 +346,7 @@ class PgdasdService {
         idSistema: 'PGDASD',
         idServico: 'CONSEXTRATO16',
         versaoSistema: '1.0',
-        dados: consultaRequest.toJson().toString(),
+        dados: jsonEncode(consultaRequest.toJson()),
       ),
     );
 
@@ -384,7 +389,7 @@ class PgdasdService {
         idSistema: 'PGDASD',
         idServico: 'GERARDASCOBRANCA17',
         versaoSistema: '1.0',
-        dados: cobrancaRequest.toJson().toString(),
+        dados: jsonEncode(cobrancaRequest.toJson()),
       ),
     );
 
@@ -427,7 +432,7 @@ class PgdasdService {
         idSistema: 'PGDASD',
         idServico: 'GERARDASPROCESSO18',
         versaoSistema: '1.0',
-        dados: processoRequest.toJson().toString(),
+        dados: jsonEncode(processoRequest.toJson()),
       ),
     );
 
@@ -466,7 +471,7 @@ class PgdasdService {
         idSistema: 'PGDASD',
         idServico: 'GERARDASAVULSO19',
         versaoSistema: '1.0',
-        dados: request.toJson().toString(),
+        dados: jsonEncode(request.toJson()),
       ),
     );
 

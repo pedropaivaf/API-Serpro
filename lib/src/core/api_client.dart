@@ -737,8 +737,7 @@ class ApiClient {
         jwtToken: responseBody['jwt_token'],
         contratanteNumero:
             responseBody['contratante_numero'] ?? contratanteNumero,
-        autorPedidoDadosNumero:
-            responseBody['autor_pedido_dados_numero'] ?? autorPedidoDadosNumero,
+        autorPedidoDadosNumero: contratanteNumero,
         tokenCreatedAt: DateTime.now(),
         procuradorToken: responseBody['procurador_token'] ?? '',
       );
