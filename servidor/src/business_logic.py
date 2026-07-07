@@ -210,12 +210,30 @@ def process_autenticar_procurador(data: Dict[str, Any], get_secret_fn=None) -> D
         jwt_token=auth_result["jwt_token"]
     )
 
-    # Extrair token
+    # Extrair token — tenta todas as chaves conhecidas (camelCase e snake_case)
     procurador_token = None
-    if "dados" in response and "autenticarProcuradorToken" in response.get("dados", {}):
-        procurador_token = response["dados"]["autenticarProcuradorToken"]
-    elif "autenticarProcuradorToken" in response:
-        procurador_token = response["autenticarProcuradorToken"]
+    dados = response.get("dados", {}) or {}
+    if isinstance(dados, dict):
+        procurador_token = (
+            dados.get("autenticarProcuradorToken")
+            or dados.get("autenticar_procurador_token")
+        )
+    if not procurador_token:
+        procurador_token = (
+            response.get("autenticarProcuradorToken")
+            or response.get("autenticar_procurador_token")
+        )
+
+    # Se o SERPRO retornou 304 (cache) mas o etag veio vazio, o token fica None.
+    # Falhar explicitamente é melhor do que retornar null silenciosamente e
+    # deixar o Dart cachear um ApiClient sem token por 50 minutos.
+    if not procurador_token:
+        status_resp = response.get("status", 200)
+        raise Exception(
+            f"Token do procurador não obtido (status SERPRO: {status_resp}). "
+            "Isso ocorre quando o SERPRO retorna 304 (cache) sem incluir o token no "
+            "ETag. Aguarde alguns minutos e tente novamente."
+        )
 
     # Resposta
     result = {
